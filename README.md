@@ -48,11 +48,11 @@ Trang web trả về kết quả của lệnh `whoami` (ví dụ: `www-data`).
 ### Mã nguồn gây lỗi (Vulnerable Code)
 ```
 $substitutions = array(
-                                    '&&' => '',
-                                    ';'  => '',
-            );
-            $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
-            $cmd = shell_exec( 'ping  ' . $target );
+                         '&&' => '',
+                         ';'  => '',
+);
+$target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+$cmd = shell_exec( 'ping  ' . $target );
 ```
 ### Các bước khai thác (Proof of Concept)
 
