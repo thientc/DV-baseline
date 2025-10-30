@@ -64,7 +64,9 @@ $substitutions = array(
 Trang web trả về kết quả của lệnh `whoami`
 
 ### Screenshots
-<img width="2559" height="1335" alt="image" src="https://github.com/user-attachments/assets/b001397c-d73f-40af-a211-0b7a1e1088c1" />
+
+<img width="2559" height="1335" alt="imageOsCommandInjectionMediumLevel" src="" />
+
 ### Mô tả
 
 
